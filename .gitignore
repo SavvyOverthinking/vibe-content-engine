@@ -1,0 +1,64 @@
+# Personal voice profiles and examples (excluded from public repo)
+my-voice/*.md
+my-voice/examples/
+!my-voice/README.md
+
+# Archive directory (personal production artifacts)
+archive/
+
+# Published directory (personal published articles)
+published/
+
+# Working directory (active production workspace)
+working/*
+!working/.gitkeep
+
+# Concepts directory (personal article briefs)
+concepts/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+.venv
+
+# Environment variables
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.editorconfig
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+.temp/
+temp/
+
+# Test files
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
