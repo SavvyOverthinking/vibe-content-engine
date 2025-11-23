@@ -13,6 +13,8 @@ All while preserving your unique voice.
 ## Features
 
 ✅ **Voice-First Production** - Maintains authentic writing style
+✅ **Brief Templates** - Standard, metaphor-driven, and challenge-based templates
+✅ **Interactive Workflow** - Smart pickers for voice selection and brief input
 ✅ **Automated Research** - Finds and validates credible sources with automatic fallbacks
 ✅ **Web Request Resilience** - 30s timeouts prevent hanging, smart failure handling
 ✅ **Quality Gates** - Ensures voice consistency (9+/10) and citation accuracy
