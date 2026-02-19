@@ -1,10 +1,8 @@
 # vibe-content-engine
 
-An experimental agentic blog writing system built on [Claude Code](https://claude.ai/code).
+An agentic blog writing system built on [Claude Code](https://claude.ai/code).
 
 **This is not a standalone tool.** It runs entirely inside Claude Code using its subagent system. You need Claude Code to use it.
-
-See it in action: [savvyoverthinking.substack.com](https://savvyoverthinking.substack.com/) — all posts produced with this system plus light human editorial passes before publishing.
 
 ---
 
@@ -35,6 +33,12 @@ Published article + complete archive
 ```
 
 Each agent runs in its own Claude Code context window via the Task tool. The orchestrator coordinates handoffs and enforces quality gates.
+
+---
+
+## See It Working
+
+All posts at [savvyoverthinking.substack.com](https://savvyoverthinking.substack.com/) were produced with this system and lightly edited before publishing. The pipeline, voice profile structure, and brief format used for those posts are the same ones in this repo.
 
 ---
 
@@ -220,12 +224,6 @@ market need, demonstrating that user satisfaction doesn't equal viability."
 ```
 
 Your observation leads. Research validates. The writer agents enforce this.
-
----
-
-## See It Working
-
-All posts at [savvyoverthinking.substack.com](https://savvyoverthinking.substack.com/) were produced with this system and lightly edited before publishing. The pipeline, voice profile structure, and brief format used for those posts are the same ones in this repo.
 
 ---
 
