@@ -116,44 +116,57 @@ Richer briefs produce better output. The system does not invent your argument �
 
 ## Running Production
 
-Open the project in Claude Code, then:
+Open the project in Claude Code and prompt the orchestrator. There are three ways to drive it — from least to most control. All three run the same pipeline.
+
+### 1. Interactive — let it ask you
 
 ```
 @orchestrator start
 ```
 
-The orchestrator prompts for voice profile, brief, and mode, then runs the full pipeline.
+It walks you through four questions, then runs the pipeline:
 
-**Modes:**
-- `automated` — runs end-to-end without pausing (fastest)
-- `interactive` — pauses after each stage for review
-- `partial` — you specify which stages to run
+1. **Voice** — which profile from `my-voice/` to write in
+2. **Brief** — load one from `concepts/briefs/`, start from a template, or paste it
+3. **Mode** — `automated`, `interactive`, or `partial`
+4. **Knowledge source** — `online` or `local` (see below)
 
-**Knowledge source** (where research and fact-checking get their evidence):
-- `online` — agents use live web research to find and independently verify sources (default)
-- `local` — agents draw **only** from a local knowledge base you point them at; no internet. Useful when you're writing from a private corpus, internal docs, or a curated source set you want every claim traced back to.
+### 2. Shorthand — pass the settings inline
 
-The orchestrator asks which to use at startup. In `local` mode, give it the absolute path to your knowledge base folder — research and fact-checking then run entirely offline against those files.
-
-**Shorthand invocation** (skip the prompts):
+Skip the questions by naming the settings in your prompt. Anything you provide is used as-is; anything you leave out, it asks about.
 
 ```
 @orchestrator start Voice: my-voice.md Brief: concepts/briefs/my-topic-brief.md Slug: my-article-slug Mode: automated Source: online
-
-# or run research + fact-checking offline against a local knowledge base:
-@orchestrator start Voice: my-voice.md Brief: concepts/briefs/my-topic-brief.md Slug: my-article-slug Mode: automated Source: local:/abs/path/to/knowledge-base
 ```
 
-**Resume an interrupted production:**
+| Setting | What it controls | Example |
+|---|---|---|
+| `Voice` | Voice profile in `my-voice/` | `my-voice.md` |
+| `Brief` | Path to the brief | `concepts/briefs/my-topic-brief.md` |
+| `Slug` | Output filename / id | `agent-control-theory` |
+| `Mode` | `automated` / `interactive` / `partial` | `automated` |
+| `Source` | `online`, or `local:<path>` for an offline knowledge base | `local:/abs/path/to/kb` |
+
+**Modes:** `automated` runs end-to-end without pausing (fastest) · `interactive` pauses after each stage for review · `partial` runs only the stages you name.
+
+### 3. Natural language — just describe the job
+
+The orchestrator also reads plain-English instructions and maps them to the same settings. This is the most flexible way to prompt it — handy when you want to derive a voice on the fly, point it at a source folder, or set hard constraints. For example:
+
+> Run a full production in automated mode. Develop the voice from the draft at `./drafts/my-post.md`, then rebuild that post. Don't use the web — research and fact-check **only** against the files in `./knowledge/`. Include links to every citation, and avoid any personal or business-sensitive details.
+
+The orchestrator reads that as: `Mode: automated`, voice derived from the draft, brief = the draft, and `Source: local:./knowledge/` — then runs without further questions.
+
+### Knowledge source: online vs local
+
+- **`online`** (default) — research-lead and fact-checker use live web research to find and independently verify sources.
+- **`local`** — they draw **only** from a local knowledge base you provide; **no internet**. Give the absolute path to the folder. Every claim is traced back to those files, and anything the knowledge base can't support is flagged. Use it for private corpora, internal docs, or any piece where you want full provenance and zero outside sources.
+
+### Resume or check status
 
 ```
-@orchestrator resume my-article-slug
-```
-
-**Check production status:**
-
-```
-@orchestrator status
+@orchestrator resume my-article-slug   # continue an interrupted run
+@orchestrator status                   # list in-progress + published work
 ```
 
 ---

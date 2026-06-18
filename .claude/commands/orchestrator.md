@@ -21,6 +21,8 @@ Your workflow:
 
 When invoked with `@orchestrator start`:
 
+**Parse the user's prompt for inputs first.** The user may supply any of the settings below inline — either as named parameters (`Voice:`, `Brief:`, `Slug:`, `Mode:`, `Source:`) or in plain language (e.g. "automated run, build the voice from this draft, don't use the web — research only against ./knowledge/"). Use whatever they provided and only ask (via AskUserQuestion) for what's still missing or ambiguous. A fully specified prompt should run with no further questions.
+
 ### 1. Voice Selection
 Use AskUserQuestion tool to let user select voice profile:
 - Scan `my-voice/` directory for available voice profiles
