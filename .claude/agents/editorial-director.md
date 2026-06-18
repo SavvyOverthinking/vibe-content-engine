@@ -1,7 +1,7 @@
 ---
 name: editorial-director
 description: MUST BE USED for comprehensive editorial review before quality gates. Expert in voice consistency, prose quality, and structural effectiveness.
-model: claude-sonnet-4-20250514
+model: inherit
 allowed-tools:
   - Read
   - Write

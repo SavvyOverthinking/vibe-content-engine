@@ -48,7 +48,7 @@ Orchestrator workflow:
 Each subagent has YAML frontmatter specifying:
 - `name`: Subagent identifier (e.g., "interrogator")
 - `description`: When to use this subagent (Claude uses this for auto-delegation)
-- `model`: Which model to use (defaults to claude-sonnet-4-5)
+- `model`: Which model to use. Defaults to `inherit` (the agent runs on whatever model you're running Claude Code with). You can pin a tier (`sonnet` / `opus` / `haiku`) or a specific model ID per agent if you want to. **Do not hard-code dated model IDs** — they go stale and break the agent when that snapshot is retired.
 - `allowed-tools`: Tool restrictions for this subagent
 
 Example:
@@ -56,7 +56,7 @@ Example:
 ---
 name: interrogator
 description: MUST BE USED for extracting knowledge from article briefs...
-model: claude-sonnet-4-20250514
+model: inherit
 allowed-tools:
   - Read
   - Write
@@ -109,7 +109,7 @@ Main coordinator that invokes subagents via Task tool:
 4. **voice-writer** - Creates draft in authentic voice
 5. **humanizer** - Reviews for AI-writing patterns, produces flagged report (no rewrites)
 6. **tone-police** - Quality gate: voice consistency (must score 9+/10)
-7. **fact-checker** - Quality gate: citation verification (must pass)
+7. **fact-checker** - Quality gate: independent fact verification (must pass)
 8. **seo-optimizer** - Optimizes discoverability without breaking voice
 9. **Final assembly** - Creates published version
 
@@ -125,6 +125,7 @@ Main coordinator that invokes subagents via Task tool:
 - Finds 3-6 credible sources
 - Validates claims
 - Prepares citations
+- **Knowledge source**: live web research (default) or a local knowledge base, no internet — set by the orchestrator at startup
 - Output: `working/research-validation-{slug}.md`
 
 **structure-architect** - Narrative design
@@ -154,10 +155,13 @@ Main coordinator that invokes subagents via Task tool:
 - **Quality Gate**: Must score 9.0+ with zero critical AI-tells
 - Output: `working/tone-police-report-{slug}.md`
 
-**fact-checker** - Citation verification
-- Verifies all URLs work
-- Confirms claims match sources
-- Checks attribution accuracy
+**fact-checker** - Independent fact verification (online or local-KB)
+- Independently verifies every claim against original sources
+- **Knowledge source**: the open web via WebSearch/WebFetch (default), or a local knowledge base only (no internet) — set by the orchestrator at startup
+- Catches confabulation: invented stats, drifted quotes, misattributed claims
+- Cross-references research-validation first, then verifies anything unverified against the chosen source
+- Checks uncited factual assertions, not just linked citations
+- In local-KB mode, any claim the KB can't support is a critical issue
 - **Quality Gate**: Must have zero critical issues
 - Output: `working/fact-check-report-{slug}.md`
 
@@ -331,5 +335,5 @@ Each subagent runs in its own context window, which:
 
 ## Version
 
-System: Blog Production v2.0 (Task Tool Architecture)
-Claude Model: Sonnet 4.5 (claude-sonnet-4-5-20250929)
+System: Blog Production v2.1 (Task Tool Architecture)
+Claude Model: Agents use `model: inherit` — they run on whatever model you're running Claude Code with. Pin a tier (`sonnet`/`opus`/`haiku`) per agent in its frontmatter if you want to.

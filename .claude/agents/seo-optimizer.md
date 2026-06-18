@@ -1,7 +1,7 @@
 ---
 name: seo-optimizer
 description: MUST BE USED for search optimization without compromising voice. Expert in titles, meta descriptions, and keyword strategy while preserving voice authenticity.
-model: claude-sonnet-4-20250514
+model: inherit
 allowed-tools:
   - Read
   - Write

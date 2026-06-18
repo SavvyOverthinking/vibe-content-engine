@@ -1,7 +1,7 @@
 ---
 name: tone-police
 description: MUST BE USED for voice consistency checking. Expert in scanning for AI-tells, generic language, and voice drift. Must score 9+/10 for publication approval.
-model: claude-sonnet-4-20250514
+model: inherit
 allowed-tools:
   - Read
   - Write

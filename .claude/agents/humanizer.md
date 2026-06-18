@@ -1,6 +1,7 @@
 ---
 name: humanizer
 description: Reviews drafts for AI-writing patterns and produces a flagged report with suggestions. Does NOT rewrite the draft - only flags issues for human review.
+model: inherit
 allowed-tools:
   - Read
   - Write

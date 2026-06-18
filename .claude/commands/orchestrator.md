@@ -44,7 +44,16 @@ Ask user to select mode:
 - **interactive** - Pause after each stage for approval
 - **partial** - User specifies which stages to run
 
-### 4. Workflow Execution
+### 4. Knowledge Source
+
+Use AskUserQuestion to choose how **research-lead** (Stage 2) and **fact-checker** (Stage 6) source and verify facts:
+
+- **online** (default) — agents use live web research (`WebSearch`/`WebFetch`) to find sources and independently verify every claim against the open web.
+- **local** — agents draw **only** from a local knowledge base you provide; **no internet**. Ask the user for the **absolute path** to the KB directory (a folder of source documents). Every claim must trace to a file under that path.
+
+Record the choice (and the KB path, if local). It changes how Stages 2 and 6 run, and you **must** pass it into both agents' task instructions (see those stages). Default to `online` if the user doesn't care.
+
+### 5. Workflow Execution
 
 Execute subagents in sequence using Task tool:
 
@@ -66,6 +75,10 @@ Use Task tool with:
   subagent: research-lead
   task: "Validate claims from working/interrogation-{slug}.md with credible research.
          Voice profile: my-voice/{voice-name}.md
+         KNOWLEDGE SOURCE: {online | local}
+           - online: use live web research (WebSearch/WebFetch).
+           - local: use ONLY files under {kb_path}; do NOT use the web; cite by file/section
+                    (and any URLs that already appear inside the KB docs).
          Save output to: working/research-validation-{slug}.md"
 ```
 - Wait for completion
@@ -136,9 +149,13 @@ Use Task tool with:
 ```
 Use Task tool with:
   subagent: fact-checker
-  task: "Verify all citations in draft:
+  task: "Independently verify every claim and citation in draft:
          - Draft: working/draft-{slug}-v1.md
          - Research: working/research-validation-{slug}.md
+         KNOWLEDGE SOURCE: {online | local}
+           - online: independently verify against original web sources (WebFetch/WebSearch).
+           - local: verify ONLY against files under {kb_path}; do NOT use the web;
+                    flag any claim the KB does not support as a critical issue.
          Save report to: working/fact-check-report-{slug}.md
          QUALITY GATE: Zero critical issues to pass"
 ```
@@ -175,6 +192,8 @@ Save state after each stage to `working/.state-{slug}.json`:
   "currentStage": "research-lead",
   "completedStages": ["interrogator"],
   "mode": "interactive",
+  "knowledgeSource": "online",
+  "knowledgeBasePath": null,
   "timestamp": "2025-01-22T10:30:00Z"
 }
 ```
@@ -219,6 +238,7 @@ The Task tool will spawn the subagent in its own context window. The subagent wi
 - **Voice authenticity > everything** - Never compromise voice for SEO
 - **Quality gates are strict** - Cannot skip failed checks
 - **Research validates, never leads** - Always observation → validation pattern
+- **Honor the knowledge source** - In `local` mode, research-lead and fact-checker use only the provided KB path and never touch the web
 - **Monitor subagent completion** - Wait for outputs before proceeding
 
 ## Error Handling

@@ -1,7 +1,7 @@
 ---
 name: structure-architect
 description: MUST BE USED for designing article narrative architecture. Expert in building structural blueprints that let author's knowledge flow naturally according to their voice profile.
-model: claude-sonnet-4-20250514
+model: inherit
 allowed-tools:
   - Read
   - Write

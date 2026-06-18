@@ -1,7 +1,7 @@
 ---
 name: production-manager
 description: Entry point for blog production. Routes requests to orchestrator and answers questions about the blog production system.
-model: claude-sonnet-4-20250514
+model: inherit
 allowed-tools:
   - Read
   - Write

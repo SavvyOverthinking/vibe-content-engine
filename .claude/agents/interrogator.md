@@ -1,6 +1,7 @@
 ---
 name: interrogator
 description: MUST BE USED for extracting knowledge from article briefs. Expert in probing for insights, metaphor mapping, and documenting operational details before any writing begins.
+model: inherit
 allowed-tools:
   - Read
   - Write

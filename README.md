@@ -15,7 +15,7 @@ Brief + Voice Profile
         ↓
 [Interrogator]        — extracts your knowledge and argument from the brief
         ↓
-[Research Lead]       — finds and validates credible sources
+[Research Lead]       — finds and validates sources (live web research or a local knowledge base)
         ↓
 [Structure Architect] — designs section-by-section narrative architecture
         ↓
@@ -25,7 +25,7 @@ Brief + Voice Profile
         ↓
 [Tone Police]         — quality gate: must score 9.0+/10 to proceed
         ↓
-[Fact Checker]        — quality gate: zero critical citation errors to proceed
+[Fact Checker]        — quality gate: independent fact verification, zero critical errors to proceed
         ↓
 [SEO Optimizer]       — improves discoverability without touching voice
         ↓
@@ -129,10 +129,19 @@ The orchestrator prompts for voice profile, brief, and mode, then runs the full 
 - `interactive` — pauses after each stage for review
 - `partial` — you specify which stages to run
 
+**Knowledge source** (where research and fact-checking get their evidence):
+- `online` — agents use live web research to find and independently verify sources (default)
+- `local` — agents draw **only** from a local knowledge base you point them at; no internet. Useful when you're writing from a private corpus, internal docs, or a curated source set you want every claim traced back to.
+
+The orchestrator asks which to use at startup. In `local` mode, give it the absolute path to your knowledge base folder — research and fact-checking then run entirely offline against those files.
+
 **Shorthand invocation** (skip the prompts):
 
 ```
-@orchestrator start Voice: my-voice.md Brief: concepts/briefs/my-topic-brief.md Slug: my-article-slug Mode: automated
+@orchestrator start Voice: my-voice.md Brief: concepts/briefs/my-topic-brief.md Slug: my-article-slug Mode: automated Source: online
+
+# or run research + fact-checking offline against a local knowledge base:
+@orchestrator start Voice: my-voice.md Brief: concepts/briefs/my-topic-brief.md Slug: my-article-slug Mode: automated Source: local:/abs/path/to/knowledge-base
 ```
 
 **Resume an interrupted production:**
@@ -195,12 +204,12 @@ Ten production subagents, each with YAML frontmatter specifying allowed tools an
 |---|---|
 | `orchestrator` | Coordinates the pipeline, enforces quality gates |
 | `interrogator` | Extracts argument and knowledge from brief |
-| `research-lead` | Finds and validates sources |
+| `research-lead` | Finds and validates sources (web research or local knowledge base) |
 | `structure-architect` | Designs narrative architecture |
 | `voice-writer` | Drafts the article |
 | `humanizer` | Flags AI-writing patterns (report only) |
 | `tone-police` | Voice quality gate (9.0+/10 required) |
-| `fact-checker` | Citation quality gate (zero critical errors) |
+| `fact-checker` | Independent fact-check gate — web or local KB (zero critical errors) |
 | `seo-optimizer` | Optimizes discoverability without touching voice |
 | `editorial-director` | Optional overall quality review |
 
@@ -229,7 +238,7 @@ Your observation leads. Research validates. The writer agents enforce this.
 
 ## Notes
 
-- Built and tested on Claude Sonnet 4.5/4.6. Agent quality scales with model capability.
+- Agents use `model: inherit`, so they run on whatever model you have Claude Code set to — run Opus for the strongest writing, or pin a tier (`sonnet`/`opus`/`haiku`) per agent in its frontmatter. Built and tested on Sonnet 4.5/4.6 and Opus; quality scales with model capability.
 - The voice extractor requires an Anthropic API key and makes LLM calls. Everything else runs through Claude Code with no extra API usage beyond your normal Claude Code subscription.
 - Interactive mode is recommended for your first production run so you can see what each stage produces.
 - The humanizer produces a flagged report — it does not rewrite your draft. You decide what to change.
